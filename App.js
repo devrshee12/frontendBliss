@@ -25,7 +25,7 @@ const App = () => {
   };
 
   // useEffect(() => {
-  //   axios.get("http://192.168.35.181:5000/getAllData")
+  //   axios.get("http://192.168.35.181:3306/getCompanies")
   //   .then((res)=>{  
   //     console.log("yes" ,res.data.data);
   //       const tempdata = [];

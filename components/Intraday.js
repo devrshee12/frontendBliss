@@ -23,7 +23,7 @@ import {
     //   { x: new Date(2015, 1, 1), y: 470, l: "hello" },
     // ];
 
-export const Intraday = ({company, type}) => {
+export const Intraday = ({company, which, isFocus1}) => {
 
     const [zoomDomain, setZoomDomain] = useState(null);
     const [selectedDomain, setSelectedDomain] = useState(null);
@@ -38,18 +38,19 @@ export const Intraday = ({company, type}) => {
     };
 
     useEffect(()=>{
-        const url = `http://192.168.35.181:5000/${type}/${company}`;
+        console.log("intraday useeffect called with" + company + " " +which);
+        const url = `http://192.168.35.181:5000/${which}/${company}`;
         console.log(url)
         axios.get(url)
         .then((res)=>{  
         // console.log(res.data.data);
             const finalData = [];
             const tempData = res.data.iv_data.map((item, i) => {
-            console.log(item.date)
-            const dateArray = item.date.split("-");
-            console.log(dateArray[0] + " : " + dateArray[1] + " : " + dateArray[2])
-            const oneItem = {x: new Date(parseInt(dateArray[0]), parseInt(dateArray[2]), parseInt(dateArray[1])), y:item.ATM_vol}
-            finalData.push(oneItem);
+              console.log(item.date)
+              const dateArray = item.date.split("-");
+              console.log(dateArray[0] + " : " + dateArray[1] + " : " + dateArray[2])
+              const oneItem = {x: new Date(parseInt(dateArray[0]), parseInt(dateArray[2]), parseInt(dateArray[1])), y:item.ATM_vol}
+              finalData.push(oneItem);
             })
 
             console.log(finalData)
@@ -59,7 +60,7 @@ export const Intraday = ({company, type}) => {
             console.log(err);
         })
 
-    }, [])
+    }, [company, which, isFocus1])
 
     return (
         <View style={styles.container}>

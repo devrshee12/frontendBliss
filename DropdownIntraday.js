@@ -3,6 +3,8 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import AntDesign from "react-native-vector-icons/AntDesign";
+import DropDownPicker from "react-native-dropdown-picker";
+import RNPickerSelect from 'react-native-picker-select';
 
 import { Intraday } from "./components/Intraday";
 
@@ -20,16 +22,19 @@ import { Intraday } from "./components/Intraday";
 
 
 const DropdownIntraday = () => {
-  const [value, setValue] = useState(null);
-  const [value1, setValue1] = useState(null);
+  const [value, setValue] = useState("1");
+  const [value1, setValue1] = useState("1");
   const [isFocus, setIsFocus] = useState(false);
   const [isFocus1, setIsFocus1] = useState(false);
   const [equity, setEquity] = useState(null);
-  const [type, setType] = useState([]);
+  const [type, setType] = useState([{name: "intraDay", value:"1"}, {name:"Daily", value: "2"}]);
 
   
 
   useEffect(() => {
+    console.log("value1 is " + value1);
+    console.log("drop down use Effect called");
+    // console.log("value of type is : " + type[value1 - 1].name);
     axios.get("http://192.168.35.181:3306/getCompanies")
     .then((res)=>{  
       // console.log(res.data.data);
@@ -41,7 +46,7 @@ const DropdownIntraday = () => {
 
         console.log(finalEquity);
         setEquity(finalEquity);
-        setType([{"name": "intraDay", "value":"1"}, {"name":"Daily", "value": "2"}])
+        setType([{name: "intraDay", value:"1"}, {name:"Daily", value: "2"}])
     }, (err) => {
         console.log(err);
     })
@@ -50,7 +55,7 @@ const DropdownIntraday = () => {
 
 
     
-  }, [])
+  }, [isFocus, isFocus1, value1])
 
 
   const renderLabel = () => {
@@ -79,7 +84,7 @@ const DropdownIntraday = () => {
       { (!!equity && !!type)&&
       
       <View style={styles.container}>
-        {renderLabel()}
+        
         <Dropdown
           iconColor="white"
           style={[styles.dropdown, { borderColor: "rgb(132,194,37)" }]}
@@ -145,9 +150,11 @@ const DropdownIntraday = () => {
           )}
         />
 
+        
+
         {
-          !!value && !!value1 &&
-          <Intraday company={equity[value-1].Label.toLowerCase()} type={value1 === "intraDay" ? "get_intraday_iv" : "get_daily_iv"}/>
+          !!value && !!value1 && 
+          <Intraday company={equity[value-1].Label.toLowerCase()} which={type[value1 - 1].name === "intraDay" ? "get_intraday_iv" : "get_daily_iv"} isFocus1={isFocus1}/>
         }
       </View>
 
